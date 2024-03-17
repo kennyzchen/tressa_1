@@ -2,7 +2,7 @@ import math
 import sys
 import numpy as np
 import random
-from pydantic import List
+from pydantic import List, Tuple
 import characters
 from levels import LEVEL_MULTIPLIER
 
@@ -23,13 +23,12 @@ def Spell():
         else:
             return False
 
-    def calc_individual_damage(self, user: characters.Player, target: characters.Enemy, kind: str, boosts: int = 0, random_multipler: float = random.uniform(0.98, 1.02)) -> int:
+    def calc_individual_damage(self, user: characters.Player, target: characters.Enemy, kind: str, boosts: int = 0, random_multiplier: float = random.uniform(0.98, 1.02)) -> int:
         #Calcs damage for one instance of a spell usage (e.g. if multi hit, only calcs one instance)
 
         atk_val = user.elem_atk
         def_val = target.elem_def
         boost_multiplier = self.boost_ratio[boosts]
-        random_multipler = random_multipler
         if target.broken:
             weakness_multiplier = 2
         elif kind in target.active_weaknesses:
