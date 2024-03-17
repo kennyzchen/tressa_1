@@ -23,14 +23,13 @@ def Spell():
         else:
             return False
 
-    def calc_individual_damage(self, user: characters.Player, target: characters.Enemy, kind: str, boosts: int = 0, use_random = True) -> int:
+    def calc_individual_damage(self, user: characters.Player, target: characters.Enemy, kind: str, boosts: int = 0, random_multipler: float = random.uniform(0.98, 1.02)) -> int:
         #Calcs damage for one instance of a spell usage (e.g. if multi hit, only calcs one instance)
 
         atk_val = user.elem_atk
         def_val = target.elem_def
         boost_multiplier = self.boost_ratio[boosts]
-        if use_random:
-            random_multiplier = random.uniform(0.98, 1.02)
+        random_multipler = random_multipler
         else:
             random_multiplier = 1
         if target.broken:
@@ -47,4 +46,4 @@ def Spell():
         dmg = round(dmg)
         return dmg
     
-Tradewinds = Spell(defence_ratio = 0.769, invocation_ratio = 130, sp_cost = 7, boost_ratio = [100, 200, 300, 400], num_hits = [1,1,1,1], kinds = ['wind', 'wind', 'wind', 'wind'])
+Tradewinds = Spell(defence_ratio = 0.769, invocation_ratio = 130, sp_cost = 7, boost_ratio = [100, 200, 300, 400], num_hits = [1,1,1,1], kinds = [('wind'), ('wind'), ('wind'), ('wind')])

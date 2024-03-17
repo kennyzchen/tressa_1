@@ -19,6 +19,7 @@ class Player:
         self.elem_def = elem_def
         self.phys_atk = phys_atk 
         self.elem_atk = elem_atk
+        self.active_weapon = weapons[0]
         self.hp = hp_max 
         self.sp = sp_max
         self.items = items
