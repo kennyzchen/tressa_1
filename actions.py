@@ -30,8 +30,6 @@ def Spell():
         def_val = target.elem_def
         boost_multiplier = self.boost_ratio[boosts]
         random_multipler = random_multipler
-        else:
-            random_multiplier = 1
         if target.broken:
             weakness_multiplier = 2
         elif kind in target.active_weaknesses:
