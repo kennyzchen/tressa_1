@@ -4,7 +4,7 @@ import numpy as np
 
 class Player:
 
-    def __init__(self, level, hp_max, sp_max, speed, phys_def, elem_def, phys_atk, elem_atk, weapons, spells, items) -> None:
+    def __init__(self, level, hp_max, sp_max, speed, phys_def, elem_def, phys_atk, elem_atk, weapons, spells, items, traits) -> None:
 
         #These will not change for the purposes of this battle
         self.level = level
@@ -13,6 +13,7 @@ class Player:
         self.speed = speed
         self.weapons = weapons 
         self.spells = spells
+        self.traits = traits
 
         #These could change
         self.phys_def = phys_def
@@ -47,7 +48,12 @@ class Enemy:
         self.buffs = [] 
         self.debuffs = []
         self.action_count = action_count
-        self.broken  = False
+        self.guard = guard
+        self.broken = False
+
+    def check_break(self) -> None:
+        if self.guard == 0 and not self.broken:
+            self.broken = True
 
     
 

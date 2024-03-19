@@ -2,11 +2,11 @@ import math
 import sys
 import numpy as np
 import random
-from pydantic import List, Tuple
+from typing import List, Tuple
 import characters
 from levels import LEVEL_MULTIPLIER
 
-def Spell():
+class offensiveSpell():
 
     def __init__(self, defence_ratio: float, invocation_ratio: float, sp_cost: int, boost_ratio = List[int], num_hits = List[int], kinds = List[Tuple[str]]) -> None:
         
@@ -43,4 +43,21 @@ def Spell():
         dmg = round(dmg)
         return dmg
     
-Tradewinds = Spell(defence_ratio = 0.769, invocation_ratio = 130, sp_cost = 7, boost_ratio = [100, 200, 300, 400], num_hits = [1,1,1,1], kinds = [('wind'), ('wind'), ('wind'), ('wind')])
+    def apply_breaks(self, target:characters.Enemy, kind: str) -> None:
+        if not target.broken:
+            if kind in target.active_weaknesses:
+                target.guard = target.guard - 1
+    
+    def use_spell(self, user: characters.Player, targets: List[characters.Enemy], boosts: int = 0) -> None:
+        i = 0
+        while i < len(self.num_hits[boosts]):
+            random_multiplier = random.uniform(0.98, 1.02)
+            kind = self.kinds[boosts][i]
+            for target in targets:
+                dmg = self.calc_individual_damage(user, target, kind, boosts, random_multiplier)
+                target.hp = max(0, target.hp - dmg)
+                self.apply_breaks(target, kind)
+                target.check_breaks()
+            i = i + 1
+    
+Tradewinds = offensiveSpell(defence_ratio = 0.769, invocation_ratio = 130, sp_cost = 7, boost_ratio = [100, 200, 300, 400], num_hits = [1,1,1,1], kinds = [('wind'), ('wind'), ('wind'), ('wind')])
