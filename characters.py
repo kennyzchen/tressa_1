@@ -107,7 +107,7 @@ class Enemy:
         self.max_guard = guard
         self.speed = speed
         self.weaknesses = weaknesses
-        self.attacks = attacks 
+        self.attacks = attacks #maybe i handle this a different way...
 
         self.hp = hp_max 
         self.phys_def = phys_def 
