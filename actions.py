@@ -39,25 +39,8 @@ class offensiveSpell():
             elemental_multiplier = 1.3 
         else:
             elemental_multiplier = 1
-        dmg = (atk_val - (def_val * self.defence_ratio / 2)) * (self.invocation_ratio / 100) * (boost_multiplier / 100) * weakness_multiplier * LEVEL_MULTIPLIER.GET(user.level) * elemental_multiplier * random_multiplier * 0.5
+        dmg = (atk_val - (def_val * self.defence_ratio / 2)) * (self.invocation_ratio / 100) * (boost_multiplier / 100) * weakness_multiplier * LEVEL_MULTIPLIER.get(user.level) * elemental_multiplier * random_multiplier * 0.5
         dmg = round(dmg)
         return dmg
-    
-    def apply_breaks(self, target:characters.Enemy, kind: str) -> None:
-        if not target.broken:
-            if kind in target.active_weaknesses:
-                target.guard = target.guard - 1
-    
-    def use_spell(self, user: characters.Player, targets: List[characters.Enemy], boosts: int = 0) -> None:
-        i = 0
-        while i < len(self.num_hits[boosts]):
-            random_multiplier = random.uniform(0.98, 1.02)
-            kind = self.kinds[boosts][i]
-            for target in targets:
-                dmg = self.calc_individual_damage(user, target, kind, boosts, random_multiplier)
-                target.hp = max(0, target.hp - dmg)
-                self.apply_breaks(target, kind)
-                target.check_breaks()
-            i = i + 1
     
 Tradewinds = offensiveSpell(defence_ratio = 0.769, invocation_ratio = 130, sp_cost = 7, boost_ratio = [100, 200, 300, 400], num_hits = [1,1,1,1], kinds = [('wind'), ('wind'), ('wind'), ('wind')])
