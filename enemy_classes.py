@@ -2,9 +2,6 @@ import math
 import sys
 import numpy as np
 import random
-import weapons
-import actions
-import items
 import characters
 from levels import LEVEL_MULTIPLIER
 from atk_categories import PHYSICAL_ATTACKS, ELEMENTAL_ATTACKS
@@ -51,7 +48,7 @@ class MikkMakk(characters.Enemy):
         elif action_num == 5:
             #Ye scurvy lubbers
             #Use at end of turn, does not need an action to cast
-            #Unclear on the lo gic for choosing whether this is used, might be 50/50 at end of turn whilst under 50%
+            #Unclear on the logic for choosing whether this is used, might be 50/50 at end of turn whilst ally is dead
             self.boosted = True # need to somehow handle boost being reset on breaks, probably do it the same way in the game when we handle turn order movement
         elif action_num == 6:
             #Pirates pride, invocation_ratio = 225
