@@ -6,6 +6,7 @@ import weapons
 import actions
 import items
 from levels import LEVEL_MULTIPLIER
+from atk_categories import PHYSICAL_ATTACKS, ELEMENTAL_ATTACKS
 from typing import List, Dict
 
 class Player:
@@ -30,8 +31,8 @@ class Player:
         self.hp = hp_max 
         self.sp = sp_max
         self.items = items
-        self.buffs = []
-        self.debuffs = []
+        self.buffs = {}
+        self.debuffs = {}
         self.defended = False
 
     def change_active_weapon(self, weapon: weapons.Weapon) -> bool:
@@ -60,14 +61,30 @@ class Player:
     def get_attack_damage(self, target) -> int:
         phys_atk = self.phys_atk + self.active_weapon.phys_atk
         level_mult = LEVEL_MULTIPLIER.get(self.level)
+        random_mult = random.uniform(0.98, 1.02)
+        buff_mult = 1
+        debuff_mult = 1
+
         if target.broken:
             weakness_mult = 2
         elif self.active_weapon.kind in target.active_weaknesses:
             weakness_mult = 1.3
         else:
             weakness_mult = 1
-        random_mult = random.uniform(0.98, 1.02)
-        dmg = 0.8 * (phys_atk - target.phys_def * 0.5) * level_mult * weakness_mult * random_mult 
+
+        if 'phys_atk_buff' in self.buffs.keys():
+            buff_mult = buff_mult * 1.5
+
+        if 'phys_def_debuff' in target.debuffs.keys():
+            buff_mult = buff_mult * 1.5
+
+        if 'phys_atk_debuff' in self.debuffs.keys():
+            debuff_mult = debuff_mult / 1.5
+
+        if 'phys_def_buff' in target.buffs.keys():
+            debuff_mult = debuff_mult / 1.5
+
+        dmg = 0.8 * (phys_atk - target.phys_def * 0.5) * level_mult * weakness_mult * debuff_mult * buff_mult * random_mult 
         dmg = round(dmg)
         return dmg
     
@@ -115,8 +132,8 @@ class Enemy:
         self.phys_atk = phys_atk 
         self.elem_atk = elem_atk 
         self.active_weaknesses = weaknesses
-        self.buffs = [] 
-        self.debuffs = []
+        self.buffs = {} 
+        self.debuffs = {}
         self.action_count = action_count
         self.guard = guard
         self.broken = False

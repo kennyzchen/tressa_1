@@ -5,6 +5,7 @@ import random
 from typing import List, Tuple
 import characters
 from levels import LEVEL_MULTIPLIER
+from atk_categories import PHYSICAL_ATTACKS, ELEMENTAL_ATTACKS
 
 class offensiveSpell():
 
@@ -29,17 +30,42 @@ class offensiveSpell():
         atk_val = user.elem_atk
         def_val = target.elem_def
         boost_multiplier = self.boost_ratio[boosts]
+        buff_multiplier = 1
+        debuff_multiplier = 1
+
         if target.broken:
             weakness_multiplier = 2
         elif kind in target.active_weaknesses:
             weakness_multiplier = 1.3
         else:
             weakness_multiplier = 1
-        if kind + '_boost' in user.buffs:
+
+        if kind + '_boost' in user.traits:
             elemental_multiplier = 1.3 
         else:
             elemental_multiplier = 1
-        dmg = (atk_val - (def_val * self.defence_ratio / 2)) * (self.invocation_ratio / 100) * (boost_multiplier / 100) * weakness_multiplier * LEVEL_MULTIPLIER.get(user.level) * elemental_multiplier * random_multiplier * 0.5
+
+        if kind in PHYSICAL_ATTACKS and 'phys_atk_buff' in user.buffs.keys():
+            buff_multiplier = buff_multiplier * 1.5 
+        elif kind in ELEMENTAL_ATTACKS and 'elem_atk_buff' in user.buffs.keys():
+            buff_multiplier = buff_multiplier * 1.5
+
+        if kind in PHYSICAL_ATTACKS and 'phys_def_debuff' in target.debuffs.keys():
+            buff_multiplier = buff_multiplier * 1.5
+        elif kind in ELEMENTAL_ATTACKS and 'elem_def_debuff' in  target.debuffs.keys():
+            buff_multiplier = buff_multiplier * 1.5
+
+        if kind in PHYSICAL_ATTACKS and 'phys_atk_debuff' in user.debuffs.keys():
+            debuff_multiplier = debuff_multiplier / 1.5 
+        elif kind in ELEMENTAL_ATTACKS and 'elem_atk_debuff' in user.debuffs.keys():
+            debuff_multiplier = debuff_multiplier / 1.5
+
+        if kind in PHYSICAL_ATTACKS and 'phys_def_buff' in target.buffs.keys():
+            debuff_multiplier = debuff_multiplier / 1.5
+        elif kind in ELEMENTAL_ATTACKS and 'elem_def_buff' in  target.buffs.keys():
+            debuff_multiplier = debuff_multiplier / 1.5
+
+        dmg = (atk_val - (def_val * self.defence_ratio / 2)) * (self.invocation_ratio / 100) * (boost_multiplier / 100) * weakness_multiplier * LEVEL_MULTIPLIER.get(user.level) * elemental_multiplier * debuff_multiplier * buff_multiplier * random_multiplier * 0.5
         dmg = round(dmg)
         return dmg
     
